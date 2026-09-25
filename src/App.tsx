@@ -85,7 +85,7 @@ export default function App() {
           </div>
 
           <div className="details-layout">
-            <article className="detail-panel">
+            <a className="detail-panel" href="https://soleil-chi-three.vercel.app/" target="_blank" rel="noreferrer" aria-label="Open the Soleil trading app">
               <span className="detail-label">MARKET + QUOTES</span>
               <span className="detail-arrow" aria-hidden="true">↗</span>
               <h3>Everything you need before you sign.</h3>
@@ -94,21 +94,21 @@ export default function App() {
                 <li>7, 10, and 14-day expiries for short-horizon views.</li>
                 <li>Premium, collateral, implied volatility, Greeks, and payoff.</li>
               </ul>
-            </article>
+            </a>
 
             <div className="detail-stack">
-              <article className="detail-tile">
+              <a className="detail-tile" href="https://soleil-chi-three.vercel.app/" target="_blank" rel="noreferrer" aria-label="Open the Soleil trading app">
                 <span className="detail-label">01 / EXECUTE</span>
                 <span className="detail-arrow" aria-hidden="true">↗</span>
                 <h3>Buy long or sell with collateral.</h3>
                 <p>Review a quote, set your size, sign with your wallet, and keep the receipt for the position.</p>
-              </article>
-              <article className="detail-tile">
+              </a>
+              <a className="detail-tile" href="https://soleilauto.vercel.app/" target="_blank" rel="noreferrer" aria-label="Open Soleil automation">
                 <span className="detail-label">02 / GUARD</span>
                 <span className="detail-arrow" aria-hidden="true">↗</span>
                 <h3>Protect the treasury you plan to keep.</h3>
                 <p>Preview protective puts, collars, covered calls, and spreads before you decide what belongs on-chain.</p>
-              </article>
+              </a>
             </div>
           </div>
 
