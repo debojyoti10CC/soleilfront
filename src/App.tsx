@@ -1,134 +1,58 @@
+import { useState, type ReactNode } from 'react';
 import Footer16 from './components/ui/footer-16';
+import { openWorkspace, workspaceLabel, verifierUrl, recordedVerifier, recordedCommit, workspaceUrl, recordedVault } from './product';
 
+const navigation = [{ href: '/how-it-works', label: 'How it works' }, { href: '/treasury', label: 'Treasury' }, { href: '/proof', label: 'Proof' }];
+function Header() {
+  const path = window.location.pathname.replace(/\/$/, '') || '/';
+  return <header className="site-header"><a className="wordmark" href="/" aria-label="Soleil home"><img className="brand-mark" src="/assets/soleil-logo.png" alt="" /><span>soleil</span></a><nav className="header-nav" aria-label="Main navigation">{navigation.map(link => <a key={link.href} href={link.href} aria-current={path === link.href ? 'page' : undefined}>{link.label}</a>)}</nav><a className="header-cta" href={openWorkspace}>{workspaceLabel} <span aria-hidden="true">↗</span></a></header>;
+}
+function Actions({ light = false }: { light?: boolean }) {
+  return <div className="page-actions"><a className={`action-link ${light ? 'action-link-light' : ''}`} href={openWorkspace}>{workspaceLabel} <span aria-hidden="true">↗</span></a><a className={`action-link action-link-secondary ${light ? 'action-link-light-secondary' : ''}`} href="/how-it-works">See how it works <span aria-hidden="true">→</span></a></div>;
+}
+function Closing({ title = <>Make the promise.<br /><em>Show the funding.</em></>, description = 'Turn accepted work into a clear commitment, and follow the payment all the way to its recipient.' }: { title?: ReactNode; description?: string }) {
+  return <section className="closing" aria-labelledby="closing-title"><div className="page-width closing-inner"><p className="section-kicker">GOOD WORK. CLEAR COMMITMENTS.</p><h2 id="closing-title">{title}</h2><p>{description}</p><Actions light /></div></section>;
+}
+const faqs = [
+  ['What does a funded commitment mean?', 'Approval records that work is accepted. Commitment is a separate onchain action that fixes the amount, recipient and due time while reserving unpaid principal in the native vault. An approved invoice alone is not a funded promise.'],
+  ['Can the contractor claim without the employer?', 'Once the committed invoice is due and its unpaid principal is covered, settlement can be called independently. The contract pays only its fixed beneficiary. The public verifier does not require workspace sign-in or the employer executor.'],
+  ['Is this real money?', 'The presentation uses actual transactions on Tempo Moderato with pathUSD test tokens. These assets have no economic value. The separate accounting simulation uses local balances and clearly labeled simulated receipts.'],
+  ['Do I need to bring a wallet?', 'The current presentation generates and manages test wallets locally for the employer and contractor. The app controls these test keys; this does not prove personal wallet ownership. Bringing an existing wallet is not part of this presentation flow.'],
+  ['Does Soleil earn yield or open a business bank account?', 'Live yield, fiat payouts and banking are not connected. Company formation links open hosted partner flows; they do not mean an entity, KYB or bank account has been approved.'],
+];
+function FAQ() { return <section className="faq-section" id="questions"><div className="page-width faq-layout"><div><p className="section-kicker">A LITTLE MORE CLARITY</p><h2>Before you<br /><span>make the promise.</span></h2></div><div className="faq-list">{faqs.map(([question, answer]) => <details key={question}><summary>{question}<span aria-hidden="true">+</span></summary><p>{answer}</p></details>)}</div></div></section>; }
+function Home() {
+  return <><section className="hero" id="top" aria-labelledby="hero-title"><Header /><div className="hero-copy"><p className="eyebrow">A CLEARER WAY TO PAY FOR GOOD WORK</p><h1 id="hero-title">Good work.<br /><em>Funded payday.</em></h1><p className="subtitle">Approve the invoice. Set aside the funds.<br />Give contractors a payment they can follow.</p><Actions /><p className="hero-context">Real Tempo testnet transactions · Managed presentation wallets</p></div><p className="hero-footnote">INVOICES · COMMITMENTS · PAYMENTS</p></section>
+    <section className="platform" id="platform" aria-labelledby="platform-title"><div className="section-intro page-width"><p className="section-kicker">THE SOLEIL PLATFORM</p><h2 id="platform-title">Set aside the promise.<br /><span>Keep the rest moving.</span></h2><p>A home for contractor invoices, funded commitments and visible payment evidence. So both sides know where the promise stands.</p></div><div className="feature-grid page-width"><article className="feature-card"><div className="feature-copy"><span className="feature-index">01 / COMMITMENTS</span><h3>Accepted work.<br />Visible funding.</h3><p>Approve an invoice, then commit its amount to a fixed recipient and due time. Keep the chain receipt beside the work.</p><a className="feature-link" href="/how-it-works">Follow an invoice <span aria-hidden="true">↗</span></a></div><img src="/assets/option-card.png" alt="Iridescent crystal bars arranged in a radial pattern" loading="lazy" /></article><article className="feature-card"><div className="feature-copy"><span className="feature-index">02 / TREASURY</span><h3>Protect the promise.<br />See the surplus.</h3><p>Separate unpaid principal and the operating buffer from funds available to the business. See what is reserved before you move money.</p><a className="feature-link" href="/treasury">Understand the reserves <span aria-hidden="true">↗</span></a></div><img src="/assets/protection-card.png" alt="Iridescent purple and orange petals" loading="lazy" /></article></div></section>
+    <section className="workflow" id="workflow" aria-labelledby="workflow-title"><div className="page-width"><div className="workflow-heading"><p className="section-kicker">FROM ACCEPTED WORK TO PAYMENT</p><h2 id="workflow-title">A clearer path<br />to the payday.</h2><p>The invoice stays readable. The commitment stays fixed. The receipt shows what happened.</p></div><div className="workflow-steps"><article><span>01</span><h3>Approve the work</h3><p>Record the contractor, amount and due time. Approval confirms acceptance; it does not move funds.</p></article><article><span>02</span><h3>Fund the promise</h3><p>Commit the approved amount onchain, with a fixed beneficiary and enough liquid funds to cover reserves.</p></article><article><span>03</span><h3>Follow the payment</h3><p>At maturity, pay from the workspace or let the contractor claim. Inspect the actual transaction receipt.</p></article></div><a className="editorial-link" href="/how-it-works">Explore the complete workflow <span aria-hidden="true">→</span></a></div></section>
+    <section className="details" id="details" aria-labelledby="details-title"><div className="page-width"><div className="details-heading"><p className="section-kicker">EVIDENCE, NOT A GUESS</p><h2 id="details-title">A promise you can<br /><span>look into.</span></h2><p>See the amount, receiving account and native status, then follow the transaction beyond the dashboard.</p></div><div className="details-layout"><a className="detail-panel" href="/proof"><span className="detail-label">ACTUAL TESTNET EVIDENCE</span><span className="detail-arrow" aria-hidden="true">↗</span><h3>The chain tells the payment story.</h3><ul className="detail-list"><li>Real Tempo Moderato commitments and settlements.</li><li>A fixed receiving account and a public transaction reference.</li><li>Independent verification of the native claim and deployed vault code.</li></ul></a><div className="detail-stack"><a className="detail-tile" href="/how-it-works#contractor"><span className="detail-label">01 / CONTRACTOR</span><span className="detail-arrow" aria-hidden="true">↗</span><h3>Know what is committed to you.</h3><p>Follow your invoices, confirm the assigned test receiving account and claim an eligible commitment from your portal.</p></a><a className="detail-tile" href="/treasury"><span className="detail-label">02 / BUSINESS</span><span className="detail-arrow" aria-hidden="true">↗</span><h3>Know what your business can move.</h3><p>Read liquid funds, unpaid commitments and the buffer together. Available surplus starts after the promise is covered.</p></a></div></div><div className="detail-stats" aria-label="Soleil implementation details"><span><strong>TEMPO</strong><small>WORKING TESTNET FLOW</small></span><span><strong>FIXED</strong><small>AMOUNT + BENEFICIARY</small></span><span><strong>PUBLIC</strong><small>TRANSACTION EVIDENCE</small></span></div></div></section><FAQ /><Closing /></>;
+}
+function PageHero({ eyebrow, title, description }: { eyebrow: string; title: ReactNode; description: string }) { return <section className="subpage-hero" id="top"><Header /><div className="page-width subpage-copy"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p className="subtitle">{description}</p></div></section>; }
+function HowItWorks() {
+  const steps = [
+    { title: 'Start with accepted work.', label: 'DRAFT → APPROVED', body: 'Create an invoice for a contractor, record what was delivered, and set the amount and due time. Review it before approval. An approval records acceptance of the work; it is not yet a native commitment.', detail: 'The business sees the invoice in its workspace. The contractor sees their assigned work in the private portal.' },
+    { title: 'Turn approval into a funded promise.', label: 'APPROVED → COMMITTED', body: 'Commit the approved invoice. Soleil records its fixed amount, beneficiary and maturity in the native vault, and reserves its unpaid principal. The current Tempo flow requires liquid funds to cover commitments and the operating buffer.', detail: 'Commitment is a signed onchain action with an actual transaction reference. A pending transaction is reconciled before another write is allowed.' },
+    { title: 'Let the due payment reach its recipient.', label: 'COMMITTED → PAID', body: 'At maturity, the employer can settle the invoice or the contractor can claim from their portal. An independent caller can also settle a valid covered claim. In every case, the vault sends only to the fixed beneficiary.', detail: 'Eligibility follows chain time and current principal coverage. A due label alone does not guarantee settlement when liquidity or RPC availability is missing.' },
+    { title: 'Keep a receipt that can be checked.', label: 'RECEIPT → VERIFICATION', body: 'Open the receipt, follow its explorer link, and compare the commitment and settlement references. Export the ledger for the workspace record. Anyone with the public claim link can inspect its native state without the employer login.', detail: 'The app reconciles recorded transactions on refresh and retries the same operation after a lost response, so the same invoice is not paid twice.' },
+  ];
+  return <><PageHero eyebrow="HOW SOLEIL WORKS" title={<>From good work<br /><em>to a clear payday.</em></>} description="One invoice, four clear stages. Acceptance, funding, settlement and evidence each mean something different." /><section className="journey-section"><div className="page-width journey-list">{steps.map((step, index) => <article className="journey-step" key={step.label}><span className="journey-number">0{index + 1}</span><div><p className="section-kicker">{step.label}</p><h2>{step.title}</h2><p>{step.body}</p><p className="journey-note">{step.detail}</p></div></article>)}</div></section>
+    <section className="roles-section" id="contractor"><div className="page-width role-grid"><article><p className="section-kicker">FOR THE BUSINESS</p><h2>A workspace for<br />the whole promise.</h2><p>Create contractors and invoices, review accepted work, inspect reserves, commit funding and follow settlement. Company information sits alongside payments, with formation and banking progress kept separate.</p><a className="editorial-link" href={openWorkspace}>{workspaceLabel} <span aria-hidden="true">↗</span></a></article><article><p className="section-kicker">FOR THE CONTRACTOR</p><h2>A clear view of<br />what belongs to you.</h2><p>Use the private portal to see assigned invoices, acknowledge the managed test receiving account and claim eligible payments. A fixed beneficiary prevents the caller from redirecting a commitment.</p><p className="role-note">The presentation uses app-managed test wallets. Personal wallet connection and fiat cash-out are not included.</p></article></div></section>
+    <section className="presentation-section" id="presentation"><div className="page-width presentation-layout"><div><p className="section-kicker">TRY THE WORKING FLOW</p><h2>Two roles.<br /><span>One real testnet story.</span></h2><p>Open the sign-in page and choose Employer presentation to inspect the funded workspace. Switch accounts, then choose Worker presentation to follow the contractor side.</p></div><div className="presentation-card"><span className="detail-label">TEMPO MODERATO</span><h3>Persistent, prepared<br />for the walkthrough.</h3><p>Presentation wallets and the vault are prepared in advance. Normal invoice commitments and payments use the existing funding rather than deploying a fresh vault for every demo.</p><a className="action-link" href={openWorkspace}>{workspaceLabel} <span aria-hidden="true">↗</span></a><p className="small-note">Accounting simulation remains a separate, explicitly labeled local exercise.</p></div></div></section><FAQ /><Closing /></>;
+}
+function ReserveIllustration() {
+  const [commitment, setCommitment] = useState(3000);
+  const liquid = 12000, buffer = 1000, surplus = liquid - commitment - buffer;
+  const units = (amount: number) => new Intl.NumberFormat('en-US').format(amount);
+  return <div className="reserve-illustration"><p className="section-kicker">ILLUSTRATIVE RESERVE MODEL</p><div className="reserve-total"><span>Liquid assets</span><strong>{units(liquid)} <small>units</small></strong></div><div className="reserve-bar" aria-hidden="true"><span className="reserve-principal" style={{ width: `${commitment / liquid * 100}%` }} /><span className="reserve-buffer" style={{ width: `${buffer / liquid * 100}%` }} /><span className="reserve-surplus" style={{ width: `${surplus / liquid * 100}%` }} /></div><dl className="reserve-key"><div><dt><i className="principal-dot" />Unpaid commitments</dt><dd>{units(commitment)}</dd></div><div><dt><i className="buffer-dot" />Operating buffer</dt><dd>{units(buffer)}</dd></div><div><dt><i className="surplus-dot" />Available surplus</dt><dd aria-live="polite">{units(surplus)}</dd></div></dl><label className="reserve-slider" htmlFor="commitment-example">Move the commitments to see the surplus change<input id="commitment-example" type="range" min="0" max="11000" step="500" value={commitment} onChange={event => setCommitment(Number(event.target.value))} /></label><p className="small-note">An explanation with sample values. This does not read or move funds from a wallet.</p></div>;
+}
+function Treasury() { return <><PageHero eyebrow="THE TREASURY" title={<>Protect the promise.<br /><em>See what is free.</em></>} description="A balance tells one part of the story. Soleil reads liquid funds alongside the commitments and buffer they need to cover." /><section className="treasury-explainer"><div className="page-width treasury-layout"><div><p className="section-kicker">RESERVES COME FIRST</p><h2>What is promised<br /><span>stays accounted for.</span></h2><p>The native vault tracks unpaid commitments separately from the operating buffer. The business can move available surplus; a surplus withdrawal must preserve both reserves.</p><p className="reserve-formula">Available surplus = liquid assets − unpaid commitments − operating buffer, with a floor of zero.</p><p>Due claims depend on full coverage of unpaid principal. A buffer shortfall alone does not block a covered claim. A principal shortfall stops settlement until coverage is restored.</p></div><ReserveIllustration /></div></section>
+    <section className="details treasury-rules"><div className="page-width"><div className="details-heading"><p className="section-kicker">RULES YOU CAN FOLLOW</p><h2>A reserve model.<br /><span>Clear consequences.</span></h2><p>Read the liquidity and native claim together. Funds counted elsewhere do not replace liquid principal.</p></div><div className="principle-grid"><article><span className="detail-label">01 / FIXED BENEFICIARY</span><h3>The caller cannot<br />change the recipient.</h3><p>Anyone settling a valid entitlement sends to its stored beneficiary. The employer and worker views share the same payment record.</p></article><article><span className="detail-label">02 / CURRENT LIQUIDITY</span><h3>A balance is checked<br />where it matters.</h3><p>Coverage and eligibility come from native chain state. Stale reads pause new transaction actions until a refresh can verify the state.</p></article><article><span className="detail-label">03 / NO YIELD ASSUMPTION</span><h3>The promise stands<br />without an APY.</h3><p>The working Tempo vault has no live yield strategy. No predicted return is used as funding for unpaid invoices.</p></article></div></div></section><section className="roles-section"><div className="page-width role-grid"><article><p className="section-kicker">WHAT YOU SEE</p><h2>Liquid. Committed.<br />Buffered. Available.</h2><p>The workspace places these values together, with vault addresses and real receipts nearby. You can follow both the business reserve and the contractor payment.</p></article><article><p className="section-kicker">WHAT IS CONNECTED</p><h2>Native test tokens.<br />Actual transactions.</h2><p>The current presentation runs on Tempo Moderato with pathUSD test tokens. Solana has local-validator proof and adapter checks; a public Solana payment workspace is not deployed.</p><a className="editorial-link" href="/proof">Inspect the implementation <span aria-hidden="true">→</span></a></article></div></section><Closing /></>; }
+function Proof() { return <><PageHero eyebrow="THE EVIDENCE" title={<>Follow the promise.<br /><em>Check the chain.</em></>} description="The presentation is backed by actual Tempo testnet transactions. Here is what you can inspect, and where the current implementation stops." /><section className="proof-section" id="independent-verification"><div className="page-width proof-layout"><div><p className="section-kicker">INDEPENDENT VERIFICATION</p><h2>The dashboard is<br /><span>the starting point.</span></h2><p>The verifier reads the claim from the native vault and compares the deployed runtime to Soleil’s compiled contract. It checks the fixed beneficiary, due time, paid state and nominal principal coverage without a workspace login.</p><p>Verification reads current state. A saved receipt is historical evidence; it is not a promise that a claim remains unpaid or eligible.</p><a className="editorial-link" href={verifierUrl}>{workspaceUrl ? 'Open the independent verifier' : 'Explore the source verifier'} <span aria-hidden="true">↗</span></a>{!workspaceUrl && <a className="editorial-link" href="https://github.com/debojyoti10CC/soleil2/blob/main/src/components/IndependentVerifier.tsx">Read the verifier source <span aria-hidden="true">↗</span></a>}</div><article className="proof-record"><p className="section-kicker">RECORDED COMMITMENT</p><h3>300 pathUSD.<br />One fixed beneficiary.</h3><dl><div><dt>Network</dt><dd>Tempo Moderato · 42431</dd></div><div><dt>Asset</dt><dd>pathUSD test token</dd></div><div><dt>Vault</dt><dd className="address">{recordedVault}</dd></div><div><dt>Record</dt><dd>Committed on October 2, 2026</dd></div></dl><div className="proof-links"><a href={recordedCommit} target="_blank" rel="noreferrer">View commitment transaction <span aria-hidden="true">↗</span></a>{workspaceUrl && <a href={recordedVerifier}>Read the current claim <span aria-hidden="true">↗</span></a>}</div><p className="small-note">A recorded testnet transaction, not a live balance feed. Test assets have no economic value.</p></article></div></section>
+    <section className="details proof-boundaries"><div className="page-width"><div className="details-heading"><p className="section-kicker">WHAT WORKS TODAY</p><h2>Real progress.<br /><span>Visible boundaries.</span></h2><p>A tested prototype is different from an audited production service. Each integration has its own state.</p></div><div className="capability-list"><article><span className="capability-status">WORKING TESTNET</span><div><h3>Tempo payments</h3><p>Persistent presentation wallets, native invoice commitments, fixed-recipient settlement, receipts, retry reconciliation and independent verification.</p></div></article><article><span className="capability-status capability-local">LOCAL PROOF</span><div><h3>Solana program</h3><p>Compiled native program, isolated local-validator execution and adapter security checks. Public devnet deployment and a live Solana workspace remain incomplete.</p></div></article><article><span className="capability-status capability-handoff">HOSTED HANDOFF</span><div><h3>Company formation</h3><p>Partner links open separate formation flows. Entity registration, KYB, banking and payment-route approvals are separate milestones.</p></div></article><article><span className="capability-status capability-planned">NOT CONNECTED</span><div><h3>Live yield and fiat payouts</h3><p>No live yield strategy, real-world banking settlement or fiat cash-out is part of the current presentation.</p></div></article></div></div></section><section className="roles-section"><div className="page-width role-grid"><article><p className="section-kicker">CUSTODY + AVAILABILITY</p><h2>Know who signs.<br />Know what is current.</h2><p>The presentation uses generated, locally managed test keys controlled by the app. It does not request an existing wallet key. When chain reads become stale or a transaction needs reconciliation, new writes pause.</p><p className="role-note">Remote network availability cannot be guaranteed. The workspace shows freshness and confirmed transaction evidence.</p></article><article><p className="section-kicker">SOURCE + VALIDATION</p><h2>Built to be<br />looked into.</h2><p>The project includes contract, backend, persistence, RPC-boundary and browser checks, plus real native payment and lost-response recovery evidence. These checks are not a security audit.</p><a className="editorial-link" href="https://github.com/debojyoti10CC/soleil2">Explore the source <span aria-hidden="true">↗</span></a></article></div></section><FAQ /><Closing title={<>See the workflow.<br /><em>Then inspect the proof.</em></>} description="A clear interface should lead to clear evidence. Follow the commitment from accepted work to the native receiving account." /></>; }
+function NotFound() { return <><PageHero eyebrow="LET’S GET YOU BACK" title={<>A clearer path<br /><em>starts here.</em></>} description="This page could not be found. Explore the platform, the payment workflow or the testnet evidence." /><section className="not-found page-width"><a className="action-link" href="/">Return to Soleil <span aria-hidden="true">→</span></a></section></>; }
 export default function App() {
-  return (
-    <main>
-      <section className="hero" aria-labelledby="hero-title">
-        <header className="site-header">
-          <a className="wordmark" href="#top" aria-label="Soleil home">
-            <img className="brand-mark" src="/assets/soleil-logo.png" alt="" />
-            <span>soleil</span>
-          </a>
-        </header>
-
-        <div className="hero-copy" id="top">
-          <p className="eyebrow">SOL OPTIONS ON SOLANA</p>
-          <h1 id="hero-title">Trade SOL options.<br /><em>Manage the risk.</em></h1>
-          <p className="subtitle">Trade calls and puts. Hedge downside exposure without selling the SOL you hold.</p>
-        </div>
-
-        <p className="hero-footnote">OPTIONS · PROTECTION · SOLANA</p>
-      </section>
-
-      <section className="platform" id="platform" aria-labelledby="platform-title">
-        <div className="section-intro page-width">
-          <p className="section-kicker">THE SOLEIL PLATFORM</p>
-          <h2 id="platform-title">Trade the move.<br /><span>Manage the risk.</span></h2>
-          <p>Soleil brings SOL options and practical risk management together in a clear, Solana-native experience.</p>
-        </div>
-
-        <div className="feature-grid page-width">
-          <article className="feature-card" id="options">
-            <div className="feature-copy">
-              <span className="feature-index">01 / OPTIONS</span>
-              <h3>Trade SOL calls<br />and puts.</h3>
-              <p>Choose a strike and expiry, set your size, and review the premium before you sign.</p>
-            </div>
-            <img src="/assets/option-card.png" alt="Abstract iridescent crystal bars arranged in a radial pattern" loading="lazy" />
-          </article>
-
-          <article className="feature-card" id="protection">
-            <div className="feature-copy">
-              <span className="feature-index">02 / PROTECTION</span>
-              <h3>Protect the SOL<br />you plan to keep.</h3>
-              <p>Use puts to manage downside exposure without selling the SOL held by you or your treasury.</p>
-            </div>
-            <img src="/assets/protection-card.png" alt="Abstract iridescent purple and orange petals" loading="lazy" />
-          </article>
-        </div>
-      </section>
-
-      <section className="workflow" id="workflow" aria-labelledby="workflow-title">
-        <div className="page-width">
-          <div className="workflow-heading">
-            <p className="section-kicker">A CLEARER WAY TO TRADE</p>
-            <h2 id="workflow-title">From market view<br />to on-chain position.</h2>
-            <p>Every decision has context, from finding a contract to following the position after you sign.</p>
-          </div>
-
-          <div className="workflow-steps">
-            <article>
-              <span>01</span>
-              <h3>Explore the market</h3>
-              <p>Compare SOL calls and puts across strikes and expiries.</p>
-            </article>
-            <article>
-              <span>02</span>
-              <h3>Shape the trade</h3>
-              <p>Set quantity and limit price, then review the quote and potential payout.</p>
-            </article>
-            <article>
-              <span>03</span>
-              <h3>Track your position</h3>
-              <p>Sign on-chain and follow your open positions in one portfolio view.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="details" id="details" aria-labelledby="details-title">
-        <div className="page-width">
-          <div className="details-heading">
-            <p className="section-kicker">BEFORE THE TRADE</p>
-            <h2 id="details-title">A clearer view of<br /><span>every contract.</span></h2>
-            <p>See the market context, understand the payoff, and choose the risk that fits your view of SOL.</p>
-          </div>
-
-          <div className="details-layout">
-            <a className="detail-panel" href="https://soleil-chi-three.vercel.app/" target="_blank" rel="noreferrer" aria-label="Open the Soleil trading app">
-              <span className="detail-label">MARKET + QUOTES</span>
-              <span className="detail-arrow" aria-hidden="true">↗</span>
-              <h3>Everything you need before you sign.</h3>
-              <ul className="detail-list">
-                <li>Live SOL/USD pricing and a strike ladder around spot.</li>
-                <li>7, 10, and 14-day expiries for short-horizon views.</li>
-                <li>Premium, collateral, implied volatility, Greeks, and payoff.</li>
-              </ul>
-            </a>
-
-            <div className="detail-stack">
-              <a className="detail-tile" href="https://soleil-chi-three.vercel.app/" target="_blank" rel="noreferrer" aria-label="Open the Soleil trading app">
-                <span className="detail-label">01 / EXECUTE</span>
-                <span className="detail-arrow" aria-hidden="true">↗</span>
-                <h3>Buy long or sell with collateral.</h3>
-                <p>Review a quote, set your size, sign with your wallet, and keep the receipt for the position.</p>
-              </a>
-              <a className="detail-tile" href="https://soleilauto.vercel.app/" target="_blank" rel="noreferrer" aria-label="Open Soleil automation">
-                <span className="detail-label">02 / GUARD</span>
-                <span className="detail-arrow" aria-hidden="true">↗</span>
-                <h3>Protect the treasury you plan to keep.</h3>
-                <p>Preview protective puts, collars, covered calls, and spreads before you decide what belongs on-chain.</p>
-              </a>
-            </div>
-          </div>
-
-          <div className="detail-stats" aria-label="Soleil product details">
-            <span><strong>SOL</strong><small>ONE UNDERLYING</small></span>
-            <span><strong>DEVNET</strong><small>REFERENCE BUILD</small></span>
-            <span><strong>ON-CHAIN</strong><small>POSITION RECEIPTS</small></span>
-          </div>
-        </div>
-      </section>
-
-      <section className="closing" aria-labelledby="closing-title">
-        <div className="page-width closing-inner">
-          <p className="section-kicker">BUILT FOR SOLANA</p>
-          <h2 id="closing-title">More control over<br /><em>what comes next.</em></h2>
-          <p>Directional exposure, downside protection, and a clearer picture of risk. All in one place.</p>
-        </div>
-      </section>
-
-      <Footer16 />
-    </main>
-  );
+  const path = window.location.pathname.replace(/\/$/, '') || '/';
+  const pages: Record<string, { title: string; content: ReactNode }> = { '/': { title: 'Soleil — Good work. Funded payday.', content: <Home /> }, '/how-it-works': { title: 'How it works — Soleil', content: <HowItWorks /> }, '/treasury': { title: 'Treasury — Soleil', content: <Treasury /> }, '/proof': { title: 'Proof — Soleil', content: <Proof /> } };
+  const page = pages[path]; document.title = page?.title ?? 'Page not found — Soleil';
+  return <><a className="skip-link" href="#main-content">Skip to content</a><main id="main-content">{page?.content ?? <NotFound />}</main><Footer16 /></>;
 }
